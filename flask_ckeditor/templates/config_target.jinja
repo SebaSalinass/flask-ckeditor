@@ -25,10 +25,13 @@
         return editor.destroy();
     });
 
+    watchdog.on( 'error', handleError );
+
     watchdog
     {% else %}
     {% set editor_class = editor_type.split('-')[0] %}
     {{ editor_class|capitalize() + 'Editor' }}
+    {% endif %}
             .create(const_name, {
                 licenseKey: "{{ license_key or '' }}",
                 {% if upload_endpoint %}
@@ -42,10 +45,9 @@
                     {% endif %}
                 }
                 {% endif %}
-            })
+            })    
             .then(NewEditor => {
                 window.editor = NewEditor;
-            })
-    {% endif %}
+            })    
             .catch (handleError);
 </script>
