@@ -5,8 +5,33 @@
 {% else %} 
     var const_name = document.querySelector("#{{ target_id }}")
 {% endif %}
-{% set editor_class = editor_type.split('-')[0] %}
-{{  editor_class|capitalize() + 'Editor' }}
+    function handleError( error ) {
+        console.error( 'Oops, something went wrong!' );
+        console.error( error );
+		}
+    {% if watchdog %}
+   
+
+
+    const watchdog = new CKSource.EditorWatchdog();
+    window.watchdog = watchdog;
+
+    watchdog.setCreator( ( element, config ) => {
+				return CKSource.Editor
+					.create( element, config )
+					.then( editor => {
+						return editor;
+					} )
+			} );
+    
+    watchdog.setDestructor( editor => {			
+				return editor.destroy();
+			} );
+
+    watchdog.
+    {% else %}
+    {% set editor_class = editor_type.split('-')[0] %}
+    {{  editor_class|capitalize() + 'Editor.' }}    
             .create( const_name, {
                 licenseKey: "{{ license_key or '' }}",
                 {% if upload_endpoint %}
@@ -23,9 +48,7 @@
             })
             .then( NewEditor => {
                 window.editor = NewEditor;
-            } )
-            .catch( error => {
-                console.error( 'Oops, something went wrong!' );
-                console.error( error );
-            } );
+            })
+    {% endif %}
+            .catch( handleError );
 </script>

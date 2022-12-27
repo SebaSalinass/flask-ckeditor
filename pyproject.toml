@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flask-ckeditor-manager"
-version = "0.1.0"
+version = "0.1.1"
 description = "A simple interface to use CKEditor5 with Flask"
 authors = ["Sebastian Salinas <seba.salinas.delrio@gmail.com>"]
 license = "MIT"

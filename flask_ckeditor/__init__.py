@@ -12,6 +12,7 @@ class CKEditorManager:
                          'balloon-block', 'decoupled-document'] = 'classic'
     enable_csrf: bool = None
     enable_csp_nonce: bool = None
+    enable_watchdog: bool = None
     upload_endpoint: str = None
     lenguage: str = None
     license_key: str = None
@@ -37,6 +38,7 @@ class CKEditorManager:
         self.lenguage = app.config.get('CKEDITOR_LANGUAGE', None)
         self.enable_csrf = app.config.get('CKEDITOR_ENABLE_CSRF', None)
         self.upload_endpoint = app.config.get('CKEDITOR_UPLOAD_ENDPOINT', None)
+        self.enable_watchdog = app.config.get('CKEDITOR_WATCHDOG', None)
 
         @app.context_processor
         def inject_context_variables() -> dict:
@@ -55,10 +57,11 @@ class CKEditorManager:
 
     def config(self, target: Union[CKEditorField, str], use_htmx: bool = None,
                upload_endpoint: str = None, enable_csrf: bool = None,
-               editor_type: str = None):
+               editor_type: str = None, enable_watchdog: bool = None):
         target_id = target if isinstance(target, str) else target.name
 
         return Markup(render_template('config_target.jinja',
+                                      enable_watchdog=enable_watchdog or self.enable_watchdog,
                                       target_id=target_id,
                                       editor_type=editor_type or self.editor_type,
                                       use_htmx=use_htmx,
