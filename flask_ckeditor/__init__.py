@@ -1,4 +1,5 @@
 from typing import Union, Literal
+import json
 
 from flask import Flask, Markup, Blueprint, render_template
 from .fields import CKEditorField
@@ -59,6 +60,7 @@ class CKEditorManager:
                upload_endpoint: str = None, enable_csrf: bool = None,
                editor_type: str = None, enable_watchdog: bool = None, extra_config: dict = None):
         target_id = target if isinstance(target, str) else target.name
+        extra_config = Markup(json.d)
 
         return Markup(render_template('config_target.jinja',
                                       enable_watchdog=enable_watchdog or self.enable_watchdog,

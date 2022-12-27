@@ -38,7 +38,9 @@
                 }
                 {% endif %}
                 {% if extra_config %}
-                {{ extra_config|tojson }}
+                {% for key, val in extra_config %}
+                    {{ key }}: {{ val|safe }}
+                {% endfor %}
                 {% endif %}
             })
     {% if not enable_watchdog %}
