@@ -5,7 +5,7 @@ description = "A simple interface to use CKEditor5 with Flask"
 authors = ["Sebastian Salinas <seba.salinas.delrio@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "flask_ckeditor_manager"}]
+packages = [{include = "flask_ckeditor"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
