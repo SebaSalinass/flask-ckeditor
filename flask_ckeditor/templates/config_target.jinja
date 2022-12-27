@@ -38,8 +38,12 @@
                 }
                 {% endif %}
                 {% if extra_config %}
-                {% for key, val in extra_config %}
-                    {{ key }}: {{ val|safe }}
+                {% for key, val in extra_config.items() recursive %}
+                    {% if val is mapping %}
+                    {{ key|safe }}: {{ loop(val.items()) }}
+                    {% else %}
+                    {{ key|safe }}: {{ val|safe }}
+                    {% endif %}
                 {% endfor %}
                 {% endif %}
             })
