@@ -50,9 +50,8 @@
         console.error('Oops, something went wrong!');
         console.error(error);
     }
-    {% if use_htmx %}
-    htmx.find('#submit')
-    document.querySelector('').addEventListener('click', (evt) => {
+    {% if use_htmx %}    
+    htmx.find('#submit').addEventListener('click', (evt) => {
         window.editor.updateSourceElement()
     })
     {% endif %}
