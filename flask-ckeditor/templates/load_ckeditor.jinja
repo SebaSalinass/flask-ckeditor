@@ -1,0 +1,7 @@
+<script nonce={{ csp_nonce() if csp_nonce else "" }}
+    {% if local_path %}
+    src="{{ url_for('static', filename=local_path ) }}"
+    {% else %}
+    src="https://cdn.ckeditor.com/ckeditor5/{{ version }}/{{ editor_type }}/ckeditor.js"
+    {% endif %}
+    ></script>
