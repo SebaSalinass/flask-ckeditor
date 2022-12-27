@@ -19,17 +19,20 @@ Install with poetry:
 ```bash
 poetry add flask-ckeditor-manager
 ```
+
 ## Configuration
+
 This are some of the settings available
 
 | Config                   | Description                                                                       | Type | Default     |
-|--------------------------|-----------------------------------------------------------------------------------|------|-------------|
+| ------------------------ | --------------------------------------------------------------------------------- | ---- | ----------- |
 | CKEDITOR_LICENSE_KEY     | CKEditor License key                                                              | str  | `None`      |
 | CKEDITOR_EDITOR_TYPE     | Editor package to be displayed                                                    | str  | `"classic"` |
 | CKEDITOR_LOCAL_PATH      | If custom package is present, this is the path in the static folder.              | str  | `None`      |
 | CKEDITOR_LANGUAGE        | The lengague of the editor.                                                       | str  | `None`      |
 | CKEDITOR_ENABLE_CSRF     | Enable CSRF protection in SimpleUpload adapter                                    | bool | `None`      |
 | CKEDITOR_UPLOAD_ENDPOINT | SimpleUpload adapter endpoint. Must follow the CKEditor5 estipulations. Read more | str  | `None`      |
+| CKEDITOR_WATCHDOG        | If watchdog plugin installed change this value to True to enable its rendering    | bool | `None`      |
 
 ## Usage
 
