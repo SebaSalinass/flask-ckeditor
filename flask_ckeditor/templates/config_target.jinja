@@ -5,14 +5,10 @@
     {% else %}
     var const_name = document.querySelector("#{{ target_id }}")
     {% endif %}
-    function handleError(error) {
-        console.error('Oops, something went wrong!');
-        console.error(error);
-    }
-    {% if enable_watchdog %}
+    
+    {% if enable_watchdog %}    
     const watchdog = new CKSource.EditorWatchdog();
     window.watchdog = watchdog;
-
     watchdog.setCreator((element, config) => {
         return CKSource.Editor
             .create(element, config)
@@ -20,13 +16,10 @@
                 return editor;
             })
     });
-
     watchdog.setDestructor(editor => {
         return editor.destroy();
     });
-
     watchdog.on( 'error', handleError );
-
     watchdog
     {% else %}
     {% set editor_class = editor_type.split('-')[0] %}
@@ -45,9 +38,16 @@
                     {% endif %}
                 }
                 {% endif %}
-            })    
+            })
+            {% if not enable_watchdog %}
             .then(NewEditor => {
                 window.editor = NewEditor;
-            })    
-            .catch (handleError);
+            })
+            {% endif %}
+            .catch( handleError );
+        
+        function handleError(error) {
+            console.error('Oops, something went wrong!');
+            console.error(error);
+        }
 </script>
