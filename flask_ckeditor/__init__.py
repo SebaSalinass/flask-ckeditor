@@ -4,11 +4,12 @@ from flask import Flask, Markup, Blueprint, render_template
 from .fields import CKEditorField
 
 
-class CKEditor:
+class CKEditorManager:
 
     app: Flask = None
     serve_local: bool = False
-    editor_type: Literal['classic ', 'inline', 'balloon', 'balloon-block', 'decoupled-document'] = 'classic'
+    editor_type: Literal['classic ', 'inline', 'balloon',
+                         'balloon-block', 'decoupled-document'] = 'classic'
     enable_csrf: bool = None
     enable_csp_nonce: bool = None
     upload_endpoint: str = None
@@ -25,7 +26,8 @@ class CKEditor:
             app.extensions = {}
         app.extensions['ckeditor'] = self
 
-        blueprint = Blueprint('ckeditor', __name__, template_folder='templates', static_url_path='/ckeditor' + app.static_url_path)
+        blueprint = Blueprint('ckeditor', __name__, template_folder='templates',
+                              static_url_path='/ckeditor' + app.static_url_path)
         app.register_blueprint(blueprint)
 
         self.app = app
@@ -39,12 +41,12 @@ class CKEditor:
         @app.context_processor
         def inject_context_variables() -> dict:
             return dict(ckeditor=self)
-    
-    def load(self, editor_type: str = None, 
-             local_path: bool = False, 
+
+    def load(self, editor_type: str = None,
+             local_path: bool = False,
              enable_csp_nonce: bool = False, version='35.4.0'):
-        
-        return Markup(render_template('load_ckeditor.jinja', 
+
+        return Markup(render_template('load_ckeditor.jinja',
                                       version=version,
                                       editor_type=editor_type or self.editor_type,
                                       local_path=local_path or self.local_path,
@@ -52,13 +54,13 @@ class CKEditor:
                                       ))
 
     def config(self, target: Union[CKEditorField, str], use_htmx: bool = None,
-               upload_endpoint: str = None, enable_csrf: bool = None, 
+               upload_endpoint: str = None, enable_csrf: bool = None,
                editor_type: str = None):
         target_id = target if isinstance(target, str) else target.name
 
         return Markup(render_template('config_target.jinja',
-                                     target_id=target_id,
-                                     editor_type=editor_type or self.editor_type,
-                                     use_htmx=use_htmx,
-                                     upload_endpoint=upload_endpoint or self.upload_endpoint,
-                                     enable_csrf=enable_csrf or self.enable_csrf))
+                                      target_id=target_id,
+                                      editor_type=editor_type or self.editor_type,
+                                      use_htmx=use_htmx,
+                                      upload_endpoint=upload_endpoint or self.upload_endpoint,
+                                      enable_csrf=enable_csrf or self.enable_csrf))

@@ -7,6 +7,10 @@ license = "MIT"
 readme = "README.md"
 packages = [{include = "flask_ckeditor"}]
 
+[tool.poetry.urls]
+"Homepage" = "https://github.com/SebaSalinass/flask-ckeditor"
+"Bug Tracker" = "https://github.com/SebaSalinass/flask-ckeditor/issues"
+
 [tool.poetry.dependencies]
 python = "^3.8"
 Flask = "^2.2.2"
