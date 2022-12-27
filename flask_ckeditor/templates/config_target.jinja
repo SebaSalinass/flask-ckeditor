@@ -1,54 +1,54 @@
 <script nonce={{ csp_nonce() if csp_nonce else "" }}>
-{% set const_name = 'editor_' + target_id|replace('-', '_') %}
-{% if use_htmx %}
+    {% set const_name = 'editor_' + target_id | replace('-', '_') %}
+    {% if use_htmx %}
     var const_name = htmx.find("#{{ target_id }}")
-{% else %} 
+    {% else %}
     var const_name = document.querySelector("#{{ target_id }}")
-{% endif %}
-    function handleError( error ) {
-        console.error( 'Oops, something went wrong!' );
-        console.error( error );
-		}
+    {% endif %}
+    function handleError(error) {
+        console.error('Oops, something went wrong!');
+        console.error(error);
+    }
     {% if watchdog %}
-   
+
 
 
     const watchdog = new CKSource.EditorWatchdog();
     window.watchdog = watchdog;
 
-    watchdog.setCreator( ( element, config ) => {
-				return CKSource.Editor
-					.create( element, config )
-					.then( editor => {
-						return editor;
-					} )
-			} );
-    
-    watchdog.setDestructor( editor => {			
-				return editor.destroy();
-			} );
+    watchdog.setCreator((element, config) => {
+        return CKSource.Editor
+            .create(element, config)
+            .then(editor => {
+                return editor;
+            })
+    });
 
-    watchdog.
+    watchdog.setDestructor(editor => {
+        return editor.destroy();
+    });
+
+    watchdog
     {% else %}
     {% set editor_class = editor_type.split('-')[0] %}
-    {{  editor_class|capitalize() + 'Editor.' }}    
-            .create( const_name, {
-                licenseKey: "{{ license_key or '' }}",
+    { { editor_class | capitalize() + 'Editor' } }    
+            .create(const_name, {
+        licenseKey: "{{ license_key or '' }}",
                 {% if upload_endpoint %}
-                simpleUpload: {
-                    uploadUrl: '{{ url_for(upload_endpoint) }}',
-                    withCredentials: true,
-                    {% if enable_csrf %}
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+    simpleUpload: {
+        uploadUrl: '{{ url_for(upload_endpoint) }}',
+            withCredentials: true,
+                {% if enable_csrf %}
+    headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     }
-                    {% endif %}
-                }
-                {% endif %}
-            })
-            .then( NewEditor => {
-                window.editor = NewEditor;
-            })
     {% endif %}
-            .catch( handleError );
+                }
+    {% endif %}
+            })
+            .then(NewEditor => {
+        window.editor = NewEditor;
+    })
+    {% endif %}
+            .catch (handleError);
 </script>
