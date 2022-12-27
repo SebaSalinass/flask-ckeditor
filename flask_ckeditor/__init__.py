@@ -57,7 +57,7 @@ class CKEditorManager:
 
     def config(self, target: Union[CKEditorField, str], use_htmx: bool = None,
                upload_endpoint: str = None, enable_csrf: bool = None,
-               editor_type: str = None, enable_watchdog: bool = None):
+               editor_type: str = None, enable_watchdog: bool = None, extra_config: dict = None):
         target_id = target if isinstance(target, str) else target.name
 
         return Markup(render_template('config_target.jinja',
@@ -66,4 +66,5 @@ class CKEditorManager:
                                       editor_type=editor_type or self.editor_type,
                                       use_htmx=use_htmx,
                                       upload_endpoint=upload_endpoint or self.upload_endpoint,
-                                      enable_csrf=enable_csrf or self.enable_csrf))
+                                      enable_csrf=enable_csrf or self.enable_csrf,
+                                      extra_config=extra_config))

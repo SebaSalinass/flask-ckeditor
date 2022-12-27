@@ -24,7 +24,7 @@
     watchdog
     {% else %}
     {% set editor_class = editor_type.split('-')[0] %}
-    { { editor_class | capitalize() + 'Editor' } }
+    {{ editor_class | capitalize() + 'Editor' }}
     {% endif %}
             .create(const_name, {
                 licenseKey: "{{ license_key or '' }}",
@@ -37,13 +37,16 @@
                         {% endif %}
                 }
                 {% endif %}
+                {% if extra_config %}
+                {{ extra_config|tojson }}
+                {% endif %}
             })
     {% if not enable_watchdog %}
             .then(NewEditor => {
         window.editor = NewEditor;
     })
     {% endif %}
-            .catch (handleError);
+            .catch(handleError);
 
     function handleError(error) {
         console.error('Oops, something went wrong!');
