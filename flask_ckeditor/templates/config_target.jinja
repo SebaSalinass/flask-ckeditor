@@ -9,10 +9,7 @@
         console.error('Oops, something went wrong!');
         console.error(error);
     }
-    {% if watchdog %}
-
-
-
+    {% if enable_watchdog %}
     const watchdog = new CKSource.EditorWatchdog();
     window.watchdog = watchdog;
 
@@ -31,24 +28,24 @@
     watchdog
     {% else %}
     {% set editor_class = editor_type.split('-')[0] %}
-    { { editor_class | capitalize() + 'Editor' } }    
+    {{ editor_class|capitalize() + 'Editor' }}
             .create(const_name, {
-        licenseKey: "{{ license_key or '' }}",
+                licenseKey: "{{ license_key or '' }}",
                 {% if upload_endpoint %}
-    simpleUpload: {
-        uploadUrl: '{{ url_for(upload_endpoint) }}',
-            withCredentials: true,
-                {% if enable_csrf %}
-    headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    }
-    {% endif %}
+                simpleUpload: {
+                    uploadUrl: '{{ url_for(upload_endpoint) }}',
+                    withCredentials: true,
+                    {% if enable_csrf %}
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    }
+                    {% endif %}
                 }
-    {% endif %}
+                {% endif %}
             })
             .then(NewEditor => {
-        window.editor = NewEditor;
-    })
+                window.editor = NewEditor;
+            })
     {% endif %}
             .catch (handleError);
 </script>
