@@ -7,24 +7,24 @@
     {% endif %}
 
     {% if enable_watchdog %}
-    var watchdog = new CKSource.EditorWatchdog();
-    window.watchdog = watchdog;
-    watchdog.setCreator((element, config) => {
-        return CKSource.Editor
-            .create(element, config)
-            .then(editor => {
-                window.editor = editor
-                return editor;
-            })
-    });
-    watchdog.setDestructor(editor => {
-        return editor.destroy();
-    });
-    watchdog.on('error', handleError);
-    watchdog
+        var watchdog = new CKSource.EditorWatchdog();
+        window.watchdog = watchdog;
+        watchdog.setCreator((element, config) => {
+            return CKSource.Editor
+                .create(element, config)
+                .then(editor => {
+                    window.editor = editor
+                    return editor;
+                })
+        });
+        watchdog.setDestructor(editor => {
+            return editor.destroy();
+        });
+        watchdog.on('error', handleError);
+        watchdog
     {% else %}
-    {% set editor_class = editor_type.split('-')[0] %}
-    {{ editor_class | capitalize() + 'Editor' }}
+        {% set editor_class = editor_type.split('-')[0] %}
+        {{ editor_class | capitalize() + 'Editor' }}
     {% endif %}
             .create(const_name, {
                 licenseKey: "{{ license_key or '' }}",
@@ -38,13 +38,41 @@
                 },
                 {% endif %}
                 {% if extra_config %}
-                {% for key, val in extra_config.items() recursive %}
-                    {% if val is mapping %}
-                    {{ key|safe }}: {{ loop(val.items()) }},
-                    {% else %}
-                    {{ key|safe }}: {{ val|safe }},
-                    {% endif %}
-                {% endfor %}
+                    {% for key, val in extra_config.items() recursive %}
+                        {% set outer_loop = loop %}
+                        {% if val is mapping %}
+                             {{ key|safe }}: { {{ outer_loop(val.items()) }} }
+                        {% elif val is sequence and val is not string %}
+                            {{ key|safe }}: [ 
+                                {% for inner_val in val recursive %}
+                                    {% if inner_val is mapping %}
+                                        { {{ outer_loop(inner_val.items()) }} }
+                                    {% elif inner_val is sequence and inner_val is not string %}
+                                        [ loop(inner_val) ]
+                                    {% else %}
+                                        {% if inner_val is string and inner_val[0] == '%' %}
+                                            {{ inner_val[1:] | safe }}
+                                        {% else %}
+                                            {{ inner_val | tojson }}
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if not loop.last %}
+                                    ,
+                                    {% endif%}
+                                {% endfor %}
+                            ]
+                        {% else %}
+                            {{ key | safe }}:
+                            {% if val is string and val[0] == '%' %}
+                                {{ val[1:] | safe }}
+                            {% else %}
+                                {{ val | tojson }}
+                            {% endif %}
+                        {% endif %}
+                        {% if not loop.last %}
+                        ,
+                        {% endif%}
+                    {% endfor %}
                 {% endif %}
             })
     {% if not enable_watchdog %}
@@ -58,7 +86,7 @@
         console.error('Oops, something went wrong!');
         console.error(error);
     }
-    {% if use_htmx %}    
+    {% if use_htmx %}
     htmx.find('#submit').addEventListener('click', (evt) => {
         window.editor.updateSourceElement()
     })
